@@ -1,0 +1,4 @@
+.idea/*
+backend/.env
+backend/.python-version
+backend/__pycache__/*

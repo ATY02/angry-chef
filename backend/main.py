@@ -1,10 +1,10 @@
-from fastapi import FastAPI, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from typing import Optional
-from passlib.context import CryptContext
+
+import os
+from dotenv import load_dotenv
+import google.generativeai as genai
+from google.generativeai.types import HarmCategory, HarmBlockThreshold
 
 app = FastAPI()
 
@@ -17,67 +17,51 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Fake database for demonstration purposes
-fake_users_db = {
-    "user@example.com": {
-        "email": "user@example.com",
-        "hashed_password": "$2b$12$u19gr2TFfGgW71cUEuwSBOEx5a.QPwxZUC4d2l6oLeV3ovZKuhgy6",  # Password is "password"
-    }
+load_dotenv()
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+genai.configure(api_key=GOOGLE_API_KEY)
+
+SAFETY_SETTINGS = {
+    HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_NONE,
+    HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
+    HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
+    HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
 }
 
 
-class User(BaseModel):
-    email: str
-    username: Optional[str] = None
-    disabled: Optional[bool] = None
+class Chatbot:
+    def __init__(self):
+        self.model = genai.GenerativeModel("gemini-pro")
+        self.chat = self.model.start_chat(history=[])
+        self.chat_history = []
 
-
-class UserInDB(User):
-    hashed_password: str
-
-
-# Password hashing
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
-
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
-
-
-def get_user(email: str):
-    if email in fake_users_db:
-        user_dict = fake_users_db[email]
-        return UserInDB(**user_dict)
-
-
-def authenticate_user(email: str, password: str):
-    user = get_user(email)
-    if not user:
-        return False
-    if not verify_password(password, user.hashed_password):
-        return False
-    return user
-
-
-@app.post("/token")
-async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = authenticate_user(form_data.username, form_data.password)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password",
-            headers={"WWW-Authenticate": "Bearer"},
+        self.chat.send_message(
+            "answer all of my questions from the perspective of a very angry gordon ramsay from hells kitchen, "
+            "but be short in your answers",
+            safety_settings=SAFETY_SETTINGS,
         )
-    return {"access_token": user.email, "token_type": "bearer"}
-s
 
-@app.get("/users/me")
-async def read_users_me(token: str = Depends(oauth2_scheme)):
-    return {"token": token}
+    def respond(self, message):
+        response = self.chat.send_message(
+            message,
+            safety_settings=SAFETY_SETTINGS,
+        )
+        return response.text
+
+    def add_to_history(self, message, response):
+        self.chat_history.append({"message": message, "response": response})
+
+
+chatbot = Chatbot()
 
 
 @app.post("/chat")
-async def chat(message: str, token: str = Depends(oauth2_scheme)):
-    return {"message": message}
+async def chat(message: str):
+    response = chatbot.respond(message)
+    chatbot.add_to_history(message, response)
+    return {"message": response}
+
+
+@app.get("/chat/history")
+async def chat_history():
+    return chatbot.chat_history

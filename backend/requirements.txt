@@ -1,0 +1,3 @@
+fastapi==0.109.2
+uvicorn==0.27.0
+fastapi-sessions==0.3.2

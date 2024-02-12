@@ -76,19 +76,19 @@ function App() {
                 <Stack direction={'column'} spacing={1}>
                     {chatHistory.map((message, index) => (
                         <div key={index}>
-                            <Box width={'100%'} textAlign={'left'} p={1}>
+                            <Box textAlign={'left'} m={1} p={1} bgcolor={'#f8f8f8'} borderRadius={1}>
                                 <Typography variant={'h6'}>You</Typography>
                                 <Typography variant={'body1'}>
                                     {message.message}
                                 </Typography>
                             </Box>
-                            <Box width={'100%'} textAlign={'left'} p={1}>
+                            <Box textAlign={'left'} m={1} p={1}>
                                 <Typography variant={'h6'}>Ramsay</Typography>
                                 <ReactMarkdown
                                     skipHtml={false}
                                     components={{
                                         p: ({children, ...props}) => (
-                                            <div {...props}>{children}</div>
+                                            <Typography variant={'body1'} {...props}>{children}</Typography>
                                         )
                                     }}
                                 >{message.response}</ReactMarkdown>
@@ -96,22 +96,26 @@ function App() {
                         </div>
                     ))}
                 </Stack>
-                {loading && <LinearProgress/>}
-                <Stack direction={'row'} spacing={1} sx={{p: 1}}>
-                    <TextField
-                        fullWidth
-                        variant={'outlined'}
-                        placeholder={"Type your message..."}
-                        value={inputText}
-                        onChange={handleInputChange}
-                        onKeyDown={handledKeyPress}
-                    />
-                    <Tooltip title={'Send'}>
-                        <IconButton onClick={handleSendMessage} size={'large'} disabled={loading}>
-                            <ArrowCircleUpRoundedIcon fontSize={'inherit'}/>
-                        </IconButton>
-                    </Tooltip>
-                </Stack>
+                <>
+                    {loading && <LinearProgress color={'secondary'} sx={{borderRadius: 2}} />}
+                    <Stack direction={'row'} spacing={1} sx={{p: 1}}>
+                        <TextField
+                            fullWidth
+                            variant={'outlined'}
+                            size={'small'}
+                            placeholder={"Type your message..."}
+                            value={inputText}
+                            onChange={handleInputChange}
+                            onKeyDown={handledKeyPress}
+                            color={'secondary'}
+                        />
+                        <Tooltip title={'Send'}>
+                            <IconButton onClick={handleSendMessage} size={'medium≠'} disabled={loading}>
+                                <ArrowCircleUpRoundedIcon fontSize={'inherit'}/>
+                            </IconButton>
+                        </Tooltip>
+                    </Stack>
+                </>
             </Paper>
         </Container>
     );

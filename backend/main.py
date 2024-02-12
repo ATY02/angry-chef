@@ -37,7 +37,7 @@ class Chatbot:
 
         self.chat.send_message(
             "answer all of my questions from the perspective of a very angry gordon ramsay from hells kitchen, "
-            "but be short in your answers",
+            "but be short in your answers and do not include your name in the responses",
             safety_settings=SAFETY_SETTINGS,
         )
 

@@ -24,7 +24,7 @@ pip install -r requirements.txt
 
 Next, you need to obtain a Google API key from
 the [Google Cloud Console](https://makersuite.google.com/app/apikey). Create
-a .env file in the project directory.
+a .env file in the backend directory.
 Add your Google API key to the .env file:
 
 ```

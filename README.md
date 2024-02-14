@@ -35,6 +35,8 @@ Now you are ready to start the FastAPI server! Run the application using Uvicorn
 
 ```bash
 uvicorn main:app --reload
+OR
+python -m uvicorn main:app --reload
 ```
 
 You can access the Swagger Documentation for the API while running the application

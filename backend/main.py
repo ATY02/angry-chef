@@ -3,8 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 import os
 from dotenv import load_dotenv
-import google.generativeai as genai
-from google.generativeai.types import HarmCategory, HarmBlockThreshold
+from chatterbot import ChatBot
+from chatterbot.trainers import ListTrainer
 
 app = FastAPI()
 
@@ -18,34 +18,36 @@ app.add_middleware(
 )
 
 load_dotenv()
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-genai.configure(api_key=GOOGLE_API_KEY)
+# GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+# genai.configure(api_key=GOOGLE_API_KEY)
 
-SAFETY_SETTINGS = {
-    HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_NONE,
-    HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
-    HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
-    HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
-}
+# SAFETY_SETTINGS = {
+#     HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_NONE,
+#     HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
+#     HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
+#     HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
+# }
 
 
 class Chatbot:
     def __init__(self):
-        self.model = genai.GenerativeModel("gemini-pro")
-        self.chat = self.model.start_chat(history=[])
+        self.bot = ChatBot("Gordon Ramsay")
         self.chat_history = []
 
-        self.chat.send_message(
-            "answer all of my questions from the perspective of a very angry gordon ramsay from hells kitchen, "
-            "but be short in your answers and do not include your name in the responses",
-            safety_settings=SAFETY_SETTINGS,
-        )
+        conversation = [
+            "Hello",
+            "Hi there!",
+            "How are you doing?",
+            "I'm doing great.",
+            "That is good to hear",
+            "Thank you.",
+            "You're welcome."
+        ]
+        trainer = ListTrainer(self.bot)
+        trainer.train(conversation)
 
     def respond(self, message):
-        response = self.chat.send_message(
-            message,
-            safety_settings=SAFETY_SETTINGS,
-        )
+        response = self.bot.get_response(message)
         return response.text
 
     def add_to_history(self, message, response):

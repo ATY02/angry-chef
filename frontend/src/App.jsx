@@ -170,7 +170,7 @@ function App() {
                         <Tooltip title={"Send"}>
                             <IconButton
                                 onClick={handleSendMessage}
-                                size={"medium≠"}
+                                size={"medium"}
                                 disabled={loading}
                             >
                                 <ArrowCircleUpRoundedIcon fontSize={"inherit"}/>

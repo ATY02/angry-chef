@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import axios from "axios";
 import "./App.css";
 import {
@@ -39,6 +39,7 @@ function App() {
     const [inputText, setInputText] = useState("");
     const [chatHistory, setChatHistory] = useState([]);
     const [loading, setLoading] = useState(false);
+    const messagesEndRef = useRef(null);
 
     const fetchChatHistory = () => {
         axios
@@ -57,6 +58,10 @@ function App() {
     useEffect(() => {
         fetchChatHistory();
     }, []);
+
+    useEffect(() => {
+        messagesEndRef.current.scrollIntoView({behavior: 'smooth'});
+    }, [chatHistory]);
 
     const handleSendMessage = () => {
         if (!inputText.trim()) return;
@@ -116,42 +121,50 @@ function App() {
                     position: "relative",
                     display: "flex",
                     flexDirection: "column",
+                    justifyContent: "flex-end",
                     minHeight: "100vh",
                 }}
             >
-                <Box sx={{flex: "1 1 auto", position: "relative"}}>
-                    <Stack direction={"column"}>
-                        {chatHistory.map((message, index) => (
-                            <div key={index}>
-                                <Box
-                                    textAlign={"left"}
-                                    m={1}
-                                    p={1}
-                                    bgcolor={theme.palette.action.hover}
-                                    borderRadius={1}
+                <Stack
+                    direction="column"
+                    justifyContent="flex-end"
+                    alignItems="center"
+                    spacing={1}
+                    sx={{
+                        flex: "1 1 auto", position: "relative"
+                    }}
+                >
+                    {chatHistory.map((message, index) => (
+                        <div key={index}>
+                            <Box
+                                textAlign={"left"}
+                                m={1}
+                                p={1}
+                                bgcolor={theme.palette.action.hover}
+                                borderRadius={1}
+                            >
+                                <Typography variant={"h6"}>You</Typography>
+                                <Typography variant={"body1"}>{message.message}</Typography>
+                            </Box>
+                            <Box textAlign={"left"} m={1} p={1}>
+                                <Typography variant={"h6"}>Ramsay</Typography>
+                                <ReactMarkdown
+                                    skipHtml={false}
+                                    components={{
+                                        p: ({children, ...props}) => (
+                                            <Typography variant={"body1"} {...props}>
+                                                {children}
+                                            </Typography>
+                                        ),
+                                    }}
                                 >
-                                    <Typography variant={"h6"}>You</Typography>
-                                    <Typography variant={"body1"}>{message.message}</Typography>
-                                </Box>
-                                <Box textAlign={"left"} m={1} p={1}>
-                                    <Typography variant={"h6"}>Ramsay</Typography>
-                                    <ReactMarkdown
-                                        skipHtml={false}
-                                        components={{
-                                            p: ({children, ...props}) => (
-                                                <Typography variant={"body1"} {...props}>
-                                                    {children}
-                                                </Typography>
-                                            ),
-                                        }}
-                                    >
-                                        {message.response}
-                                    </ReactMarkdown>
-                                </Box>
-                            </div>
-                        ))}
-                    </Stack>
-                </Box>
+                                    {message.response}
+                                </ReactMarkdown>
+                            </Box>
+                        </div>
+                    ))}
+                    <div ref={messagesEndRef}/>
+                </Stack>
                 <Paper sx={{mt: 2}}>
                     {loading && (
                         <LinearProgress color={"secondary"} sx={{borderRadius: 2}}/>

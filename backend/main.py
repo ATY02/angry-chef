@@ -399,6 +399,23 @@ class Chatbot:
         ]
         trainer = ListTrainer(self.bot)
         trainer.train(conversation)
+        
+        recipes = list()
+        with open("data/recipes.txt") as file:
+            current_line = ""
+            for line in file:
+                if line[0] == "\"":
+                    if line[-1] == "\"":
+                        current_line = line[1:-1]
+                    else:
+                        current_line = line[1:]  
+                elif line[-1] == "\"":
+                    current_line += line[:-1]
+                    recipes.append(current_line)
+                else:
+                    current_line += line
+        print(recipes)
+        trainer.train(recipes)
 
     def respond(self, message):
         response = self.bot.get_response(message)

@@ -6,7 +6,7 @@ of our training.
 from main import read_recipes, Chatbot
 
 def setup():
-    bot = Chatbot(True)
+    bot = Chatbot()
     bot.train(read_recipes("backend/data/tworecipes.txt"))
     return bot
 

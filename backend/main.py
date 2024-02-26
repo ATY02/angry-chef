@@ -46,11 +46,10 @@ def read_recipes(filename: str):
     return recipes
 
 class Chatbot:
-    def __init__(self, test=False):
+    def __init__(self):
         self.bot = ChatBot("Gordon Ramsay")
         self.chat_history = []
         self.trainer = ListTrainer(self.bot)
-        self.test = test
 
         conversation = [
             "Hello",
@@ -429,8 +428,10 @@ class Chatbot:
 
 
 chatbot = Chatbot()
-if not chatbot.test:
+try:
     chatbot.train(read_recipes("data/recipes.txt"))
+except(FileNotFoundError):
+    chatbot.train(read_recipes("backend/data/recipes.txt"))
 
 
 @app.post("/chat")

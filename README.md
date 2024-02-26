@@ -34,12 +34,24 @@ You may need to install spacy, an additional dependency:
 python -m spacy download en_core_web_sm
 ```
 
-Now you are ready to start the FastAPI server! Run the application using Uvicorn (runs on http://localhost:8000/):
+Now you are ready to start the FastAPI server! Run the application using Uvicorn (runs on http://localhost:8000/).
+
 
 ```bash
 uvicorn main:app --reload
 OR
 python -m uvicorn main:app --reload
+```
+
+Note - in order for the frontend to work with both gemini and chatterbot, you need to run both serveres in separate
+windows. To do this, run the below commands:
+
+```bash
+uvicorn gemini:app --reload --port 8000
+uvicorn main:app --reload --port 8001  # In a separate window
+OR
+python -m uvicorn gemini:app --reload --port 8000
+python -m uvicorn main:app --reload --port 8001  # In a separate window
 ```
 
 You can access the Swagger Documentation for the API while running the application

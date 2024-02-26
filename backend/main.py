@@ -35,7 +35,7 @@ def read_recipes(filename: str):
         for line in file:
             if line[0] == "\"":
                 if line.strip()[-1] == "\"":
-                    current_line = line[1:-1]
+                    recipes.append(line[1:-1])
                 else:
                     current_line = line[1:]  
             elif len(line.strip()) > 0 and line.strip()[-1] == "\"":

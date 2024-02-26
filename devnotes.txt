@@ -1,0 +1,5 @@
+gemini.py - chat.send_message tells the Ai how to act
+App.jsx - where to put visible emotions
+
+Gemini - can tell it how to act
+Chatterbot - based on our input

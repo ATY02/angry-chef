@@ -36,8 +36,9 @@ class Chatbot:
         self.chat_history = []
 
         self.chat.send_message(
-            "answer all of my questions from the perspective of a very angry gordon ramsay from hells kitchen, "
-            "but be short in your answers and do not include your name in the responses",
+            "answer all of my questions from the perspective of gordon ramsay from hells kitchen who is usually angry "
+            "but be short in your answers and do not include your name in the responses. Once at the very start of the response,"
+            "format your emotion on it's own line in the format: {emotion}. Make sure it is only shown once!",
             safety_settings=SAFETY_SETTINGS,
         )
 

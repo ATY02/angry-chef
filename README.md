@@ -22,7 +22,8 @@ Navigate to the `backend` directory in your shell and install the dependencies u
 pip install -r requirements.txt
 ```
 
-Next, install ChatterPy, the machine learning chatbot we use. This is a version of chatterbot with continued maintenance for python 3.11. Learn more about it [here](https://github.com/ShoneGK/ChatterPy).
+Next, install ChatterPy, the machine learning chatbot we use. This is a version of chatterbot with continued maintenance
+for python 3.11. Learn more about it [here](https://github.com/ShoneGK/ChatterPy).
 
 ```bash
 pip install git+https://github.com/ShoneGK/ChatterPy
@@ -34,12 +35,31 @@ You may need to install spacy, an additional dependency:
 python -m spacy download en_core_web_sm
 ```
 
-Now you are ready to start the FastAPI server! Run the application using Uvicorn (runs on http://localhost:8000/):
+Now you are ready to start the FastAPI server! Run the application using Uvicorn (runs on http://localhost:8000/).
 
 ```bash
 uvicorn main:app --reload
 OR
 python -m uvicorn main:app --reload
+```
+
+Note - in order for the frontend to work with both gemini and chatterbot, you need to run both serveres in separate
+windows. To do this, run the below commands:
+
+```bash
+uvicorn gemini:app --reload --port 8000
+uvicorn main:app --reload --port 8001  # In a separate window
+OR
+python -m uvicorn gemini:app --reload --port 8000
+python -m uvicorn main:app --reload --port 8001  # In a separate window
+```
+
+Alternatively, if you have all packages installed in the respective frontend/ and backend/ directories, you can
+run `start.py` from the application base directory. You must first configure the `BASE_URL` variable as one that matches
+the configuration of your machine (ex. `/Users/dummy/Documents/Github/angry-chef`) - then you can run:
+
+```bash
+python start.py
 ```
 
 You can access the Swagger Documentation for the API while running the application
@@ -61,11 +81,13 @@ npm run dev
 
 ## Development -- Google Gemini
 
-The following steps and development directions set up an ideal version of our angry chef bot using the comprehensive functionality of Google's Gemini GPT.
+The following steps and development directions set up an ideal version of our angry chef bot using the comprehensive
+functionality of Google's Gemini GPT.
 
 ### Backend
 
-Navigate to the `backend` directory in your shell and install the dependencies using pip (these are the same dependencies as above):
+Navigate to the `backend` directory in your shell and install the dependencies using pip (these are the same
+dependencies as above):
 
 ```bash
 pip install -r requirements.txt

@@ -8,12 +8,14 @@ import {
     Stack,
     TextField,
     Tooltip,
-    Typography,
+    Typography, useTheme,
 } from "@mui/material";
 import ArrowCircleUpRoundedIcon from "@mui/icons-material/ArrowCircleUpRounded";
 import ReactMarkdown from "react-markdown";
 
 const Chat = ({baseUrl}) => {
+    const theme = useTheme();
+
     const [messages, setMessages] = useState([]);
     const [inputText, setInputText] = useState("");
     const [chatHistory, setChatHistory] = useState([]);

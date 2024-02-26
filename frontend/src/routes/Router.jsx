@@ -3,9 +3,6 @@ import {
 } from "react-router-dom";
 import Chat from "../pages/Chat.jsx";
 
-const chatterbotBaseUrl = 'http://localhost:8001';
-const geminiBaseUrl = 'http://localhost:8000';
-
 const Routes = createBrowserRouter([
     {
         path: '/',
@@ -13,11 +10,11 @@ const Routes = createBrowserRouter([
     },
     {
         path: '/chatterbot',
-        element: <Chat baseUrl={chatterbotBaseUrl}/>,
+        element: <Chat/>,
     },
     {
         path: '/gemini',
-        element: <Chat baseUrl={geminiBaseUrl}/>,
+        element: <Chat/>,
     },
 ]);
 

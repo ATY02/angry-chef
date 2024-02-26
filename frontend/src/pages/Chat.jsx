@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import {
     Box,
@@ -8,23 +8,40 @@ import {
     Stack,
     TextField,
     Tooltip,
-    Typography, useTheme,
+    Typography,
+    useTheme,
 } from "@mui/material";
 import ArrowCircleUpRoundedIcon from "@mui/icons-material/ArrowCircleUpRounded";
 import ReactMarkdown from "react-markdown";
 
-const Chat = ({baseUrl}) => {
+const Chat = () => {
     const theme = useTheme();
 
-    const [messages, setMessages] = useState([]);
     const [inputText, setInputText] = useState("");
     const [chatHistory, setChatHistory] = useState([]);
     const [loading, setLoading] = useState(false);
     const messagesEndRef = useRef(null);
+    const [baseUrl, setBaseUrl] = useState('');
+
+    useEffect(() => {
+        const currentUrl = window.location.href;
+        if (currentUrl.includes('gemini')) {
+            setBaseUrl('http://localhost:8000');
+        } else {
+            setBaseUrl('http://localhost:8001');
+        }
+    }, []);
+
+    useEffect(() => {
+        if (baseUrl) {
+            fetchChatHistory();
+        }
+    }, [baseUrl]);
 
     const fetchChatHistory = () => {
+        console.log('Making request to...', `${baseUrl}/chat/history`)
         axios
-            .get(baseUrl + "/chat/history")
+            .get(`${baseUrl}/chat/history`)
             .then((response) => {
                 setChatHistory(response.data);
             })
@@ -37,37 +54,27 @@ const Chat = ({baseUrl}) => {
     };
 
     useEffect(() => {
-        fetchChatHistory();
-    }, []);
-
-    useEffect(() => {
-        messagesEndRef.current.scrollIntoView({behavior: 'smooth'});
+        messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }, [chatHistory]);
 
     const handleSendMessage = () => {
         if (!inputText.trim()) return;
         setLoading(true);
 
-        setMessages([...messages, {text: inputText, isUser: true}]);
-        setInputText("");
-
         axios
-            .post("http://localhost:8000/chat", null, {
+            .post(`${baseUrl}/chat`, null, {
                 params: {
                     message: inputText,
                 },
             })
-            .then((response) => {
-                setMessages([
-                    ...messages,
-                    {text: response.data.message, isUser: false},
-                ]);
-            })
             .catch((error) => {
                 console.error("Error:", error);
+            })
+            .finally(() => {
+                fetchChatHistory();
             });
 
-        fetchChatHistory();
+        setInputText("");
     };
 
     const handleInputChange = (e) => {
@@ -82,15 +89,7 @@ const Chat = ({baseUrl}) => {
 
     return (
         <>
-            <Stack
-                direction="column"
-                justifyContent="flex-end"
-                alignItems="center"
-                spacing={1}
-                sx={{
-                    flex: "1 1 auto", position: "relative"
-                }}
-            >
+            <Stack direction={'column'} spacing={1}>
                 {chatHistory.map((message, index) => (
                     <div key={index}>
                         <Box
@@ -108,7 +107,7 @@ const Chat = ({baseUrl}) => {
                             <ReactMarkdown
                                 skipHtml={false}
                                 components={{
-                                    p: ({children, ...props}) => (
+                                    p: ({ children, ...props }) => (
                                         <Typography variant={"body1"} {...props}>
                                             {children}
                                         </Typography>
@@ -120,13 +119,13 @@ const Chat = ({baseUrl}) => {
                         </Box>
                     </div>
                 ))}
-                <div ref={messagesEndRef}/>
+                <div ref={messagesEndRef} />
             </Stack>
-            <Paper sx={{mt: 2}}>
+            <Paper sx={{ mt: 2 }}>
                 {loading && (
-                    <LinearProgress color={"secondary"} sx={{borderRadius: 2}}/>
+                    <LinearProgress color={"secondary"} sx={{ borderRadius: 2 }} />
                 )}
-                <Stack direction={"row"} spacing={1} sx={{p: 1}}>
+                <Stack direction={"row"} spacing={1} sx={{ p: 1 }}>
                     <TextField
                         fullWidth
                         variant={"outlined"}
@@ -143,7 +142,7 @@ const Chat = ({baseUrl}) => {
                             size={"medium"}
                             disabled={loading}
                         >
-                            <ArrowCircleUpRoundedIcon fontSize={"inherit"}/>
+                            <ArrowCircleUpRoundedIcon fontSize={"inherit"} />
                         </IconButton>
                     </Tooltip>
                 </Stack>

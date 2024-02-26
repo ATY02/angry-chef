@@ -46,10 +46,11 @@ def read_recipes(filename: str):
     return recipes
 
 class Chatbot:
-    def __init__(self):
+    def __init__(self, test=False):
         self.bot = ChatBot("Gordon Ramsay")
         self.chat_history = []
         self.trainer = ListTrainer(self.bot)
+        self.test = test
 
         conversation = [
             "Hello",
@@ -428,7 +429,8 @@ class Chatbot:
 
 
 chatbot = Chatbot()
-chatbot.train(read_recipes("data/recipes.txt"))
+if not chatbot.test:
+    chatbot.train(read_recipes("data/recipes.txt"))
 
 
 @app.post("/chat")

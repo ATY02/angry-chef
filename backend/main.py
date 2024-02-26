@@ -49,6 +49,7 @@ class Chatbot:
     def __init__(self):
         self.bot = ChatBot("Gordon Ramsay")
         self.chat_history = []
+        self.trainer = ListTrainer(self.bot)
 
         conversation = [
             "Hello",
@@ -413,13 +414,10 @@ class Chatbot:
             "What's the best way to cook quinoa?",
             "Are you kidding me? Rinse quinoa, add it to boiling water, reduce heat, cover, and simmer for about 15 minutes until water is absorbed!"
         ]
-        trainer = ListTrainer(self.bot)
-        trainer.train(conversation)
-        
-        recipes = read_recipes("data/recipes.txt")
-        print(recipes)
-        print(len(recipes))
-        trainer.train(recipes)
+        self.trainer.train(conversation)
+
+    def train(self, conversation: list):
+        self.trainer.train(conversation)
 
     def respond(self, message):
         response = self.bot.get_response(message)
@@ -430,6 +428,7 @@ class Chatbot:
 
 
 chatbot = Chatbot()
+chatbot.train(read_recipes("data/recipes.txt"))
 
 
 @app.post("/chat")

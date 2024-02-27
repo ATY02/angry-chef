@@ -28,6 +28,22 @@ SAFETY_SETTINGS = {
     HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
 }
 
+emotional_state = 9
+
+# FORMAT_PROMPT = "Once at the very start of the response,format your emotion on it's own " \
+#                 "line in the format: {emotion}. Make sure it is only shown once! "
+
+FORMAT_PROMPT = "Once at the very start of the response, format your emotion on it's own " \
+                "line in the format: {number}. " \
+                "If the response is angry, number should be 1. " \
+                "If the response is condescending, number should be 2. " \
+                "If the response is helpful, number should be 3. " \
+                "If the response is something else, number should be 9. " \
+                "Make sure it is only shown once! "
+
+PERSONALITY_PROMPT = "Answer all of my questions from the perspective of a angry gordon ramsay from hells kitchen " \
+                     "who is usually angry but be brief in your answers and do not include your name in the responses."
+
 
 class Chatbot:
     def __init__(self):
@@ -36,9 +52,7 @@ class Chatbot:
         self.chat_history = []
 
         self.chat.send_message(
-            "answer all of my questions from the perspective of gordon ramsay from hells kitchen who is usually angry "
-            "but be short in your answers and do not include your name in the responses. Once at the very start of the response,"
-            "format your emotion on it's own line in the format: {emotion}. Make sure it is only shown once!",
+            PERSONALITY_PROMPT + FORMAT_PROMPT,
             safety_settings=SAFETY_SETTINGS,
         )
 
@@ -59,10 +73,30 @@ chatbot = Chatbot()
 @app.post("/chat")
 async def chat(message: str):
     response = chatbot.respond(message)
-    chatbot.add_to_history(message, response)
-    return {"message": response}
+
+    # Extracts the emotional state
+    actualResponse = extract_response(response)
+    actualResponse = actualResponse
+
+    chatbot.add_to_history(message, actualResponse)
+    return {"message": actualResponse}
 
 
 @app.get("/chat/history")
 async def chat_history():
     return chatbot.chat_history
+
+
+# Extracts the emotional state and the response
+def extract_response(response):
+    header_split = response.split("}")
+
+    if (len(header_split) == 1):
+        return response
+    else:
+        number_split = header_split[0].split("{")
+
+        global emotional_state
+        emotional_state = int(number_split[1])
+
+        return header_split[1]

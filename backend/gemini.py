@@ -35,11 +35,11 @@ emotional_state = 9
 
 FORMAT_PROMPT = "Once at the very start of the response, format your emotion on it's own " \
                 "line in the format: {number}. " \
-                "If the response is angry, number should be 1. " \
-                "If the response is condescending, number should be 2. " \
-                "If the response is helpful, number should be 3. " \
-                "If the response is something else, number should be 9. " \
-                "Make sure it is only shown once! "
+                "If you are angry, number should be 1. " \
+                "If you are condescending, number should be 2. " \
+                "If you are helpful, number should be 3. " \
+                "If you are feeling none of the above, number should be 9. " \
+                "Make sure it is only shown once!"
 
 PERSONALITY_PROMPT = "Answer all of my questions from the perspective of a angry gordon ramsay from hells kitchen " \
                      "who is usually angry but be brief in your answers and do not include your name in the responses."
@@ -76,7 +76,7 @@ async def chat(message: str):
 
     # Extracts the emotional state
     actualResponse = extract_response(response)
-    actualResponse = actualResponse
+    actualResponse = actualResponse + str(emotional_state)
 
     chatbot.add_to_history(message, actualResponse)
     return {"message": actualResponse}

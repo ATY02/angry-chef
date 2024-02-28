@@ -427,9 +427,14 @@ class Chatbot:
         trainer.train(recipes)
 
     def respond(self, message):
-        # response = self.bot.get_response(message)
-        # return response.text
+        response = self.bot.get_response(message)
+        self.gemini_bot.respond(message)    # still track messages in gemini
+        return response.text
+        # return self.gemini_bot.respond(message)
+
+    def respond_recipe(self,message):
         return self.gemini_bot.respond(message)
+
 
     def add_to_history(self, message, response):
         self.gemini_bot.add_to_history(message=message, response=response)
@@ -441,7 +446,10 @@ chatbot = Chatbot()
 
 @app.post("/chat")
 async def chat(message: str):
-    response = chatbot.respond(message)
+    if "recipe" in message:
+        response = chatbot.respond_recipe(message)
+    else:
+        response = chatbot.respond(message)
     chatbot.add_to_history(message, response)
     return {"message": response}
 

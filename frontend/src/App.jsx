@@ -1,123 +1,81 @@
-import {useEffect, useState} from 'react';
-import axios from 'axios';
-import './App.css';
+import {useMemo, useState} from "react";
+import "./App.css";
 import {
-    Box,
+    AppBar,
     Container,
+    createTheme,
+    CssBaseline,
     IconButton,
-    LinearProgress,
-    Paper,
+    Link,
     Stack,
-    TextField,
-    Tooltip,
-    Typography
+    ThemeProvider, Toolbar,
+    Tooltip, Typography,
+    useMediaQuery,
 } from "@mui/material";
-import ArrowCircleUpRoundedIcon from '@mui/icons-material/ArrowCircleUpRounded';
-import ReactMarkdown from 'react-markdown';
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import {RouterProvider} from "react-router-dom";
+import Routes from "./routes/Router.jsx";
 
 function App() {
-    const [messages, setMessages] = useState([]);
-    const [inputText, setInputText] = useState('');
-    const [chatHistory, setChatHistory] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+    const [darkMode, setDarkMode] = useState(prefersDarkMode);
 
-    const fetchChatHistory = () => {
-        axios.get('http://localhost:8000/chat/history')
-            .then((response) => {
-                setChatHistory(response.data);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-    };
+    const theme = useMemo(
+        () =>
+            createTheme({
+                palette: {
+                    mode: darkMode ? "dark" : "light",
+                    // background: darkMode ? "#3f3f3f" : "#b7b7b7",
+                },
+            }),
+        [darkMode],
+    );
 
-    useEffect(() => {
-        fetchChatHistory();
-    }, []);
-
-    const handleSendMessage = () => {
-        if (!inputText.trim()) return;
-        setLoading(true);
-
-        setMessages([...messages, {text: inputText, isUser: true}]);
-        setInputText('');
-
-        axios.post('http://localhost:8000/chat', null, {
-            params: {
-                message: inputText
-            }
-        })
-            .then((response) => {
-                setMessages([...messages, {text: response.data.message, isUser: false}]);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-
-        fetchChatHistory();
-    };
-
-    const handleInputChange = (e) => {
-        setInputText(e.target.value);
-    };
-
-    const handledKeyPress = (e) => {
-        if (e.key === 'Enter') {
-            handleSendMessage();
-        }
+    const toggleTheme = () => {
+        setDarkMode(!darkMode);
     };
 
     return (
-        <Container maxWidth={'md'}>
-            <Paper>
-                <Stack direction={'column'} spacing={1}>
-                    {chatHistory.map((message, index) => (
-                        <div key={index}>
-                            <Box textAlign={'left'} m={1} p={1} bgcolor={'#f8f8f8'} borderRadius={1}>
-                                <Typography variant={'h6'}>You</Typography>
-                                <Typography variant={'body1'}>
-                                    {message.message}
-                                </Typography>
-                            </Box>
-                            <Box textAlign={'left'} m={1} p={1}>
-                                <Typography variant={'h6'}>Ramsay</Typography>
-                                <ReactMarkdown
-                                    skipHtml={false}
-                                    components={{
-                                        p: ({children, ...props}) => (
-                                            <Typography variant={'body1'} {...props}>{children}</Typography>
-                                        )
-                                    }}
-                                >{message.response}</ReactMarkdown>
-                            </Box>
-                        </div>
-                    ))}
-                </Stack>
-                <>
-                    {loading && <LinearProgress color={'secondary'} sx={{borderRadius: 2}} />}
-                    <Stack direction={'row'} spacing={1} sx={{p: 1}}>
-                        <TextField
-                            fullWidth
-                            variant={'outlined'}
-                            size={'small'}
-                            placeholder={"Type your message..."}
-                            value={inputText}
-                            onChange={handleInputChange}
-                            onKeyDown={handledKeyPress}
-                            color={'secondary'}
-                        />
-                        <Tooltip title={'Send'}>
-                            <IconButton onClick={handleSendMessage} size={'medium≠'} disabled={loading}>
-                                <ArrowCircleUpRoundedIcon fontSize={'inherit'}/>
-                            </IconButton>
-                        </Tooltip>
+        <ThemeProvider theme={theme}>
+            <CssBaseline/>
+            <AppBar>
+                <Toolbar>
+                    <Typography variant={'h5'}>
+                        RamsayAI
+                    </Typography>
+                    <Stack direction={'row'} spacing={1} paddingLeft={4}>
+                        <Link href={'/gemini'} sx={{color: '#fff', textDecoration: 'none'}}>
+                            Gemini
+                        </Link>
+                        <Link href={'/chatterbot'} sx={{color: '#fff', textDecoration: 'none'}}>
+                            Chatterbot
+                        </Link>
                     </Stack>
-                </>
-            </Paper>
-        </Container>
+                    <Tooltip
+                        title={darkMode ? "Switch to Light Theme" : "Switch to Dark Theme"}
+                        sx={{position: "absolute", top: 12, right: 12}}
+                    >
+                        <IconButton onClick={toggleTheme}>
+                            {darkMode ? <LightModeIcon/> : <DarkModeIcon/>}
+                        </IconButton>
+                    </Tooltip>
+                </Toolbar>
+            </AppBar>
+            <Container
+                maxWidth={"md"}
+                sx={{
+                    p: 2,
+                    position: "relative",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "flex-end",
+                    minHeight: "100vh",
+                }}
+            >
+                <RouterProvider router={Routes}/>
+            </Container>
+        </ThemeProvider>
     );
 }
 

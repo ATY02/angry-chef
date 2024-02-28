@@ -21,6 +21,8 @@ app.add_middleware(
 )
 
 load_dotenv()
+
+
 # GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 # genai.configure(api_key=GOOGLE_API_KEY)
 
@@ -402,7 +404,6 @@ class Chatbot:
         #     "Are you kidding me? Rinse quinoa, add it to boiling water, reduce heat, cover, and simmer for about 15 minutes until water is absorbed!"
         # ]
 
-        
         # recipes = list()
         # with open("data/recipes.txt") as file:
         #     current_line = ""
@@ -427,12 +428,12 @@ class Chatbot:
 
     def respond(self, message):
         # response = self.bot.get_response(message)
-        response = self.gemini_bot.respond(message)
-        return response.text
-
+        # return response.text
+        return self.gemini_bot.respond(message)
 
     def add_to_history(self, message, response):
-        self.chat_history.append({"message": message, "response": response})
+        self.gemini_bot.add_to_history(message=message, response=response)
+        # self.chat_history.append({"message": message, "response": response})
 
 
 chatbot = Chatbot()
@@ -447,4 +448,4 @@ async def chat(message: str):
 
 @app.get("/chat/history")
 async def chat_history():
-    return chatbot.chat_history
+    return chatbot.gemini_bot.chat_history

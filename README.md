@@ -39,7 +39,9 @@ Now you are ready to start the FastAPI server! Run the application using Uvicorn
 
 ```bash
 uvicorn main:app --reload
+```
 OR
+```bash
 python -m uvicorn main:app --reload
 ```
 

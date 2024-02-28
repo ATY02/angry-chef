@@ -51,7 +51,9 @@ windows. To do this, run the below commands:
 ```bash
 uvicorn gemini:app --reload --port 8000
 uvicorn main:app --reload --port 8001  # In a separate window
+```
 OR
+```bash
 python -m uvicorn gemini:app --reload --port 8000
 python -m uvicorn main:app --reload --port 8001  # In a separate window
 ```
@@ -108,7 +110,9 @@ Now you are ready to start the FastAPI server! Run the application using Uvicorn
 
 ```bash
 uvicorn gemini:app --reload
+```
 OR
+```bash
 python -m uvicorn gemini:app --reload
 ```
 

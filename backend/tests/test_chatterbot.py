@@ -21,3 +21,10 @@ def test_basic_response():
     response = bot.respond("How do you properly cook a perfect ribeye steak?")
     
     assert response == "Seriously? Sear it on high heat and let it rest before slicing!"
+
+def test_basic_response():
+    bot = setup()
+    bot.respond("How do you properly cook a perfect ribeye steak?")
+    
+    assert bot.chat_history[0] == "How do you properly cook a perfect ribeye steak?"
+    assert bot.chat_history[1] == "Seriously? Sear it on high heat and let it rest before slicing!"

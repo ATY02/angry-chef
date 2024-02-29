@@ -39,6 +39,9 @@ class Chatbot:
         self.bot = ChatBot("Gordon Ramsay")
         self.chat_history = []
         self.gemini_bot = gemini.Chatbot()
+        self.gemini_bot.respond("whenever I ask for a recipe, provide it to me in a manner where every "
+                                "instruction/step of the recipe is given in an insulting way and the words "
+                                "of Gordon Ramsay. Remember not to include your name in the responses ever ")
 
         trainer = ListTrainer(self.bot)
         qna = util.parse_qna("data/qna.txt")
@@ -48,13 +51,12 @@ class Chatbot:
 
     def respond(self, message):
         response = self.bot.get_response(message)
-        self.gemini_bot.respond(message)    # still track messages in gemini
+        self.gemini_bot.respond(message)  # still track messages in gemini
         return response.text
         # return self.gemini_bot.respond(message)
 
-    def respond_recipe(self,message):
+    def respond_gemini(self, message):
         return self.gemini_bot.respond(message)
-
 
     def add_to_history(self, message, response):
         self.gemini_bot.add_to_history(message=message, response=response)
@@ -67,7 +69,10 @@ chatbot = Chatbot()
 @app.post("/chat")
 async def chat(message: str):
     if "recipe" in message:
-        response = chatbot.respond_recipe(message)
+        # prompt = ("for the following command, please give it to me where every instruction and step of the recipe is "
+        #           "spoken from Gordon"
+        #           "Ramsay's voice: " + message)
+        response = chatbot.respond_gemini(message)
     else:
         response = chatbot.respond(message)
     chatbot.add_to_history(message, response)

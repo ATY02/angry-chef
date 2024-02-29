@@ -41,7 +41,12 @@ class Chatbot:
         self.gemini_bot = gemini.Chatbot()
         self.gemini_bot.respond("whenever I ask for a recipe, provide it to me in a manner where every "
                                 "instruction/step of the recipe is given in an insulting way and the words "
-                                "of Gordon Ramsay. Remember not to include your name in the responses ever ")
+                                "of Gordon Ramsay. embed the insult into the instruction like for example: Get your hands on a good cut of meat, you donkey!, "
+                                "Don't be stingy with the oil, you fool! "
+                                "Season it properly, you idiot sandwich! "
+                                "Add some garlic powder, you spoon! "
+                                "And don't forget the onion powder, you donut! "
+                                "Pat the steak dry with paper towels. You don't want it wet, you muppet! Remember not to include your name in the responses ever or mention giving a recipe. Think of it as a conversation")
 
         trainer = ListTrainer(self.bot)
         qna = util.parse_qna("data/qna.txt")

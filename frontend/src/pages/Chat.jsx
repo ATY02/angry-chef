@@ -28,6 +28,11 @@ function getRandomImage(chatHistoryLength) {
     return images[randomIndex];
 }
 
+function getSpecificImage(emotionalState) {
+    const images = [angryRamsay1, angryRamsay2, disappointedRamsay, happyRamsay, neutralRamsay, ramsay];
+    return images[emotionalState];
+}
+
 const Chat = () => {
     const theme = useTheme();
 
@@ -55,7 +60,6 @@ const Chat = () => {
     }, [baseUrl]);
 
     const fetchChatHistory = () => {
-        console.log('Making request to...', `${baseUrl}/chat/history`)
         axios
             .get(`${baseUrl}/chat/history`)
             .then((response) => {
@@ -104,7 +108,15 @@ const Chat = () => {
     };
 
     useEffect(() => {
-        setGordonImg(getRandomImage(chatHistory.length));
+        let img = 5;
+        console.log(chatHistory);
+        if (chatHistory.length > 0) {
+            if (chatHistory[chatHistory.length - 1].emotion) {
+                img = chatHistory[chatHistory.length - 1].emotion;
+            }
+        }
+
+        setGordonImg(getSpecificImage(img));
     }, [chatHistory]);
 
     return (
@@ -145,7 +157,7 @@ const Chat = () => {
                                         ),
                                     }}
                                 >
-                                    {message.response}
+                                    {message.emotion}
                                 </ReactMarkdown>
                             </Box>
                         </div>

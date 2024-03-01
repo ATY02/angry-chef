@@ -57,7 +57,10 @@ class Chatbot:
     def respond(self, message):
         response = self.bot.get_response(message)
         self.gemini_bot.respond(message)  # still track messages in gemini
-        return response.text
+        if "!" not in response.text:            # check if the response is an output (contains "!")
+            return self.respond(message)
+        else:
+            return response.text
         # return self.gemini_bot.respond(message)
 
     def respond_gemini(self, message):

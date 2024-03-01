@@ -179,7 +179,7 @@ const Chat = () => {
                     </Stack>
                 </Paper>
             </Container>
-            <Box sx={{position: 'absolute', bottom: 0, right: 0}}>
+            <Box sx={{position: 'fixed', bottom: 0, right: 0}}>
                 <img src={gordonImg} style={{width: '250px', height: 'auto'}}/>
             </Box>
         </>

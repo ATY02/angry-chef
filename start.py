@@ -1,7 +1,7 @@
 import subprocess
 import platform
 
-BASE_PATH = 'C:/Users/isaac/Desktop/Process Trends/angry-chef'  # Todo - replace this with your path to the app
+BASE_PATH = ''  # Todo - replace this with your path to the app
 
 processes = []
 

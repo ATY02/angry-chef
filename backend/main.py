@@ -28,11 +28,28 @@ load_dotenv()
 #     HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
 # }
 
+def read_recipes(filename: str):
+    recipes = list()
+    with open(filename) as file:
+        current_line = ""
+        for line in file:
+            if line[0] == "\"":
+                if line.strip()[-1] == "\"":
+                    recipes.append(line.strip()[1:-1])
+                else:
+                    current_line = line[1:]  
+            elif len(line.strip()) > 0 and line.strip()[-1] == "\"":
+                current_line += line.strip()[:-1]
+                recipes.append(current_line)
+            else:
+                current_line += line
+    return recipes
 
 class Chatbot:
     def __init__(self):
         self.bot = ChatBot("Gordon Ramsay")
         self.chat_history = []
+        self.trainer = ListTrainer(self.bot)
 
         conversation = [
             "Hello",
@@ -389,7 +406,7 @@ class Chatbot:
             "You're clueless! Mash avocado with lime juice, salt, pepper, garlic, and chopped cilantro until combined!",
 
             "What's the secret to making a perfect pizza dough?",
-            "Unbelievable! Mix flour, yeast, salt, and water, knead until smooth, then let rise until doubled in size before shaping and baking!",
+            "Unbelievable, incompetent mongoose! Mix flour, yeast, salt, and water, knead until smooth, then let rise until doubled in size before shaping and baking!",
 
             "How do you roast a whole chicken?",
             "Do you have a brain? Season chicken with salt, pepper, and herbs, roast at 375°F until golden brown and cooked through!",
@@ -397,8 +414,10 @@ class Chatbot:
             "What's the best way to cook quinoa?",
             "Are you kidding me? Rinse quinoa, add it to boiling water, reduce heat, cover, and simmer for about 15 minutes until water is absorbed!"
         ]
-        trainer = ListTrainer(self.bot)
-        trainer.train(conversation)
+        self.trainer.train(conversation)
+
+    def train(self, conversation: list):
+        self.trainer.train(conversation)
 
     def respond(self, message):
         response = self.bot.get_response(message)
@@ -409,6 +428,10 @@ class Chatbot:
 
 
 chatbot = Chatbot()
+try:
+    chatbot.train(read_recipes("data/recipes.txt"))
+except(FileNotFoundError):
+    chatbot.train(read_recipes("backend/data/recipes.txt"))
 
 
 @app.post("/chat")

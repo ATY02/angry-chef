@@ -20,16 +20,9 @@ import happyRamsay from '../../public/HappyRamsay.png';
 import neutralRamsay from '../../public/NeutralRamsay.png';
 import ramsay from '../../public/ramsay.png';
 
-function getRandomImage(chatHistoryLength) {
-    const images = [angryRamsay1, angryRamsay2, disappointedRamsay, happyRamsay, neutralRamsay, ramsay];
-
-    const randomIndex = Math.floor(Math.random() * chatHistoryLength) % images.length;
-
-    return images[randomIndex];
-}
 
 function getSpecificImage(emotionalState) {
-    const images = [angryRamsay1, angryRamsay2, disappointedRamsay, happyRamsay, neutralRamsay, ramsay];
+    const images = [angryRamsay1, angryRamsay2, disappointedRamsay, happyRamsay, ramsay, neutralRamsay];
     return images[emotionalState];
 }
 
@@ -157,7 +150,7 @@ const Chat = () => {
                                         ),
                                     }}
                                 >
-                                    {message.emotion}
+                                    {message.response}
                                 </ReactMarkdown>
                             </Box>
                         </div>

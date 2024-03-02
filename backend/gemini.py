@@ -33,6 +33,7 @@ SAFETY_SETTINGS = {
 
 FORMAT_PROMPT = "Once at the very start of the response, format your emotion on it's own " \
                 "line in the format: number} " \
+                "If you want the user to leave the kitchen, number should be 0} " \
                 "If you are angry, number should be 1} " \
                 "If you are condescending, number should be 2} " \
                 "If you are helpful, number should be 3} " \
@@ -74,8 +75,12 @@ async def chat(message: str):
 
     # Extracts the emotional state
     actualResponse = extract_response(response)
-    responseEmotion = actualResponse[1]
-    responseText = actualResponse[0]
+    responseEmotion = 5
+    responseText = actualResponse
+
+    if isinstance(actualResponse, tuple):
+        responseEmotion = actualResponse[0]
+        responseText = actualResponse[1]
 
     chatbot.add_to_history(message, responseText, responseEmotion)
     return {"message": responseText}
@@ -93,4 +98,4 @@ def extract_response(response):
     if len(header_split) == 1:
         return response
     else:
-        return header_split[1], int(header_split[0])
+        return int(header_split[0]), header_split[1]

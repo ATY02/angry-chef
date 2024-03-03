@@ -22,18 +22,6 @@ app.add_middleware(
 
 load_dotenv()
 
-
-# GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-# genai.configure(api_key=GOOGLE_API_KEY)
-
-# SAFETY_SETTINGS = {
-#     HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_NONE,
-#     HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
-#     HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
-#     HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
-# }
-
-
 class Chatbot:
     def __init__(self):
         self.bot = ChatBot("Gordon Ramsay")
@@ -61,14 +49,12 @@ class Chatbot:
             return self.respond(message)
         else:
             return response.text
-        # return self.gemini_bot.respond(message)
 
     def respond_gemini(self, message):
         return self.gemini_bot.respond(message)
 
     def add_to_history(self, message, response):
         self.gemini_bot.add_to_history(message=message, response=response)
-        # self.chat_history.append({"message": message, "response": response})
 
 
 chatbot = Chatbot()
@@ -77,9 +63,6 @@ chatbot = Chatbot()
 @app.post("/chat")
 async def chat(message: str):
     if "recipe" in message:
-        # prompt = ("for the following command, please give it to me where every instruction and step of the recipe is "
-        #           "spoken from Gordon"
-        #           "Ramsay's voice: " + message)
         response = chatbot.respond_gemini(message)
     else:
         response = chatbot.respond(message)

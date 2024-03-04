@@ -3,4 +3,5 @@ backend/.env
 backend/.python-version
 backend/__pycache__/*
 backend/db.sqlite3*
+backend/tests/__pycache__/*
 start.py

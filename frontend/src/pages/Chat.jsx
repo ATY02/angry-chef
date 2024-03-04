@@ -2,9 +2,11 @@ import {useEffect, useRef, useState} from "react";
 import axios from "axios";
 import {
     Box,
+    Button,
     Container,
     IconButton,
     LinearProgress,
+    Modal,
     Paper,
     Stack,
     TextField,
@@ -13,7 +15,9 @@ import {
     useTheme,
 } from "@mui/material";
 import ArrowCircleUpRoundedIcon from "@mui/icons-material/ArrowCircleUpRounded";
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import ReactMarkdown from "react-markdown";
+
 
 const Chat = () => {
     const theme = useTheme();
@@ -23,6 +27,12 @@ const Chat = () => {
     const [loading, setLoading] = useState(false);
     const messagesEndRef = useRef(null);
     const [baseUrl, setBaseUrl] = useState('');
+
+
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
 
     useEffect(() => {
         const currentUrl = window.location.href;
@@ -82,23 +92,37 @@ const Chat = () => {
     };
 
     const handledKeyPress = (e) => {
-        // if (e.key === "Enter") {
-        //     handleSendMessage();
-        // }
+        if (e.keyCode === 13 && !e.shiftKey) {
+            e.preventDefault();
+            handleSendMessage();
+            setInputText('');
+        }
+    };
+
+    const handleClearChatHistory = () => {
+        axios
+            .post(`${baseUrl}/chat/history`)
+            .catch((error) => {
+                console.error("Error:", error);
+            })
+            .finally(() => {
+                fetchChatHistory();
+                handleClose();
+            });
     };
 
     return (
         <Container
-        maxWidth={"md"}
-                sx={{
-                    p: 2,
-                    position: "relative",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "flex-end",
-                    minHeight: "100vh",
-                }}
-            >
+            maxWidth={"md"}
+            sx={{
+                p: 2,
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "flex-end",
+                minHeight: "100vh",
+            }}
+        >
             <Stack direction={'column'} spacing={1}>
                 {chatHistory.map((message, index) => (
                     <div key={index}>
@@ -153,6 +177,41 @@ const Chat = () => {
                     <LinearProgress color={"secondary"} sx={{borderRadius: 2}}/>
                 )}
                 <Stack direction={"row"} spacing={1} sx={{p: 1}}>
+                    <Tooltip title={"Clear History"}>
+                        <IconButton
+                            onClick={handleOpen}
+                            size={'medium'}
+                        >
+                            <DeleteRoundedIcon fontSize={'inherit'}/>
+                        </IconButton>
+                    </Tooltip>
+                    <Modal
+                        open={open}
+                        onClose={handleClose}
+                    >
+                        <Box sx={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: 400,
+                            bgcolor: 'background.paper',
+                            boxShadow: 24,
+                            p: 2,
+                        }}>
+                            <Typography variant={'body1'} paddingBottom={3}>
+                                Are you sure you want to clear chat history?
+                            </Typography>
+                            <Stack direction={'row'} justifyContent={'flex-end'} spacing={1}>
+                                <Button color={'inherit'} onClick={handleClose}>Cancel</Button>
+                                <Button
+                                    color={'error'}
+                                    onClick={handleClearChatHistory}
+                                    variant={'contained'}
+                                >Confirm</Button>
+                            </Stack>
+                        </Box>
+                    </Modal>
                     <TextField
                         fullWidth
                         multiline

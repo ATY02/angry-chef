@@ -40,8 +40,9 @@ FORMAT_PROMPT = "Once at the very start of the response, format your emotion on 
                 "If you are feeling none of the above, number should be 5} " \
                 "Make sure it is only shown once!"
 
-PERSONALITY_PROMPT = "Answer all of my questions from the perspective of a angry gordon ramsay from hells kitchen " \
-                     "who is usually angry but be brief in your answers and do not include your name in the responses."
+PERSONALITY_PROMPT = "Answer all of my questions from the perspective of a angry, condescending gordon ramsay from " \
+                     "hells kitchen who is usually angry but be brief in your answers and do not include your name " \
+                     "in the responses. If asked for cooking advice, make sure to actually give it."
 
 
 class Chatbot:

@@ -22,6 +22,7 @@ app.add_middleware(
 
 load_dotenv()
 
+
 class Chatbot:
     def __init__(self):
         self.bot = ChatBot("Gordon Ramsay")
@@ -37,16 +38,18 @@ class Chatbot:
                                 "Pat the steak dry with paper towels. You don't want it wet, you muppet! Remember not to include your name in the responses ever or mention giving a recipe. Think of it as a conversation")
 
         trainer = ListTrainer(self.bot)
-        qna = util.parse_qna("data/qna.txt")
-        recipes = util.parse_recipes("data/recipes.txt")
-        trainer.train(qna)
-        trainer.train(recipes)
-
+        try:
+            qna = util.parse_qna("data/qna.txt")
+            recipes = util.parse_recipes("data/recipes.txt")
+            trainer.train(qna)
+            trainer.train(recipes)
+        except FileNotFoundError:
+            print("file not found")
 
     def respond(self, message):
         response = self.bot.get_response(message)
         self.gemini_bot.respond(message)  # still track messages in gemini
-        if "!" not in response.text:            # check if the response is an output (contains "!")
+        if "!" not in response.text:  # check if the response is an output (contains "!")
             return self.respond(message)
         else:
             return response.text
@@ -59,10 +62,6 @@ class Chatbot:
 
 
 chatbot = Chatbot()
-try:
-    chatbot.train(read_recipes("data/recipes.txt"))
-except(FileNotFoundError):
-    chatbot.train(read_recipes("backend/data/recipes.txt"))
 
 
 @app.post("/chat")

@@ -46,7 +46,7 @@ python -m uvicorn main:app --reload
 ```
 
 Note - in order for the frontend to work with both gemini and chatterbot, you need to run both serveres in separate
-windows. To do this, run the below commands:
+windows. To do this, run the below commands (also see google gemini setup instructions below):
 
 ```bash
 uvicorn gemini:app --reload --port 8000
@@ -82,6 +82,10 @@ Now you are ready to start the frontend server! Run the frontend using npm (runs
 ```bash
 npm run dev
 ```
+### Chatterbot Text Collection
+
+While running both chatterbot and gemini APIs, chatterbot will send any recipe requests to the gemini API to increase the 
+quality of its responses while we continue to train it on more recipes. To disable this feature, deactivate the gemini API.
 
 ## Development -- Google Gemini
 

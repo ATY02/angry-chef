@@ -42,6 +42,7 @@ class Chatbot:
         trainer.train(qna)
         trainer.train(recipes)
 
+
     def respond(self, message):
         response = self.bot.get_response(message)
         self.gemini_bot.respond(message)  # still track messages in gemini
@@ -58,6 +59,10 @@ class Chatbot:
 
 
 chatbot = Chatbot()
+try:
+    chatbot.train(read_recipes("data/recipes.txt"))
+except(FileNotFoundError):
+    chatbot.train(read_recipes("backend/data/recipes.txt"))
 
 
 @app.post("/chat")

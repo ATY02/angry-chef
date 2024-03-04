@@ -3,7 +3,7 @@ General tests for the chatterbot Ramsay AI to ensure it responds appropriately a
 of our training.
 """
 
-from backend.main import Chatbot
+from main import Chatbot
 
 
 def setup():

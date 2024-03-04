@@ -28,12 +28,8 @@ SAFETY_SETTINGS = {
     HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
 }
 
-# FORMAT_PROMPT = "Once at the very start of the response,format your emotion on it's own " \
-#                 "line in the format: {emotion}. Make sure it is only shown once! "
-
 FORMAT_PROMPT = "Once at the very start of the response, format your emotion on it's own " \
                 "line in the format: number} " \
-                "If you want the user to leave the kitchen, number should be 0} " \
                 "If you are angry, number should be 1} " \
                 "If you are condescending, number should be 2} " \
                 "If you are helpful, number should be 3} " \

@@ -23,6 +23,9 @@ import ramsay from '../../public/ramsay.png';
 
 function getSpecificImage(emotionalState) {
     const images = [angryRamsay1, angryRamsay2, disappointedRamsay, happyRamsay, ramsay, neutralRamsay];
+    if(!Number.isInteger(emotionalState) || emotionalState > 5 || emotionalState < 0) {
+        return images[5];
+    }
     return images[emotionalState];
 }
 

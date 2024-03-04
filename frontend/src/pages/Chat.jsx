@@ -2,6 +2,7 @@ import {useEffect, useRef, useState} from "react";
 import axios from "axios";
 import {
     Box,
+    Container,
     IconButton,
     LinearProgress,
     Paper,
@@ -87,7 +88,17 @@ const Chat = () => {
     };
 
     return (
-        <>
+        <Container
+        maxWidth={"md"}
+                sx={{
+                    p: 2,
+                    position: "relative",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "flex-end",
+                    minHeight: "100vh",
+                }}
+            >
             <Stack direction={'column'} spacing={1}>
                 {chatHistory.map((message, index) => (
                     <div key={index}>
@@ -164,7 +175,7 @@ const Chat = () => {
                     </Tooltip>
                 </Stack>
             </Paper>
-        </>
+        </Container>
     );
 }
 

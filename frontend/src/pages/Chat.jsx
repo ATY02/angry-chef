@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import {useEffect, useRef, useState} from "react";
 import axios from "axios";
 import {
     Box,
@@ -39,7 +39,6 @@ const Chat = () => {
     }, [baseUrl]);
 
     const fetchChatHistory = () => {
-        console.log('Making request to...', `${baseUrl}/chat/history`)
         axios
             .get(`${baseUrl}/chat/history`)
             .then((response) => {
@@ -54,7 +53,7 @@ const Chat = () => {
     };
 
     useEffect(() => {
-        messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        messagesEndRef.current.scrollIntoView({behavior: 'smooth'});
     }, [chatHistory]);
 
     const handleSendMessage = () => {
@@ -82,9 +81,9 @@ const Chat = () => {
     };
 
     const handledKeyPress = (e) => {
-        if (e.key === "Enter") {
-            handleSendMessage();
-        }
+        // if (e.key === "Enter") {
+        //     handleSendMessage();
+        // }
     };
 
     return (
@@ -100,14 +99,31 @@ const Chat = () => {
                             borderRadius={1}
                         >
                             <Typography variant={"h6"}>You</Typography>
-                            <Typography variant={"body1"}>{message.message}</Typography>
+                            {message.message.split("\n").map((line, index) => (
+                                <div key={index}>
+                                    <ReactMarkdown
+                                        skipHtml={false}
+                                        components={{
+                                            p: ({children, ...props}) => (
+                                                <Typography variant={"body1"} {...props}>
+                                                    {children}
+                                                </Typography>
+                                            ),
+                                        }}
+                                    >
+                                        {line}
+                                    </ReactMarkdown>
+                                    {index !== message.message.split("\n").length - 1 ? <br/> : undefined}
+                                </div>
+                            ))}
                         </Box>
                         <Box textAlign={"left"} m={1} p={1}>
                             <Typography variant={"h6"}>Ramsay</Typography>
                             <ReactMarkdown
+                                key={index}
                                 skipHtml={false}
                                 components={{
-                                    p: ({ children, ...props }) => (
+                                    p: ({children, ...props}) => (
                                         <Typography variant={"body1"} {...props}>
                                             {children}
                                         </Typography>
@@ -119,15 +135,16 @@ const Chat = () => {
                         </Box>
                     </div>
                 ))}
-                <div ref={messagesEndRef} />
+                <div ref={messagesEndRef}/>
             </Stack>
-            <Paper sx={{ mt: 2 }}>
+            <Paper sx={{mt: 2}}>
                 {loading && (
-                    <LinearProgress color={"secondary"} sx={{ borderRadius: 2 }} />
+                    <LinearProgress color={"secondary"} sx={{borderRadius: 2}}/>
                 )}
-                <Stack direction={"row"} spacing={1} sx={{ p: 1 }}>
+                <Stack direction={"row"} spacing={1} sx={{p: 1}}>
                     <TextField
                         fullWidth
+                        multiline
                         variant={"outlined"}
                         size={"small"}
                         placeholder={"Type your message..."}
@@ -142,7 +159,7 @@ const Chat = () => {
                             size={"medium"}
                             disabled={loading}
                         >
-                            <ArrowCircleUpRoundedIcon fontSize={"inherit"} />
+                            <ArrowCircleUpRoundedIcon fontSize={"inherit"}/>
                         </IconButton>
                     </Tooltip>
                 </Stack>

@@ -22,7 +22,7 @@ def test_basic_response():
     
     assert response == "Seriously? Sear it on high heat and let it rest before slicing!"
 
-def test_basic_response():
+def test_basic_response_2():
     bot = setup()
     prompt = "How do you properly cook a perfect ribeye steak?"
     response = "Seriously? Sear it on high heat and let it rest before slicing!"
@@ -30,3 +30,9 @@ def test_basic_response():
     bot.add_to_history(prompt, response)
     
     assert bot.chat_history[0] == {"message": prompt, "response": response}
+
+def test_precise_responses():
+    bot = setup()
+
+    response = bot.respond("How do you make a creamy risotto?")
+    assert response == "You're clueless! Add the stock gradually and stir constantly!"

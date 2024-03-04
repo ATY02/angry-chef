@@ -62,19 +62,7 @@ function App() {
                     </Tooltip>
                 </Toolbar>
             </AppBar>
-            <Container
-                maxWidth={"md"}
-                sx={{
-                    p: 2,
-                    position: "relative",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "flex-end",
-                    minHeight: "100vh",
-                }}
-            >
-                <RouterProvider router={Routes}/>
-            </Container>
+            <RouterProvider router={Routes}/>
         </ThemeProvider>
     );
 }

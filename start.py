@@ -22,8 +22,8 @@ def close_all_processes():
 
 
 commands = [
-    f'cd {BASE_PATH}/backend && uvicorn gemini:app --reload --port 8000',
-    f'cd {BASE_PATH}/backend && uvicorn main:app --reload --port 8001',
+    f'cd {BASE_PATH}/backend && python -m uvicorn gemini:app --reload --port 8000',
+    f'cd {BASE_PATH}/backend && python -m uvicorn main:app --reload --port 8001',
     f'cd {BASE_PATH}/frontend && npm install && npm run dev',
 ]
 

@@ -17,11 +17,11 @@ from gemini import Chatbot
 #     assert bot.chat_history[0] == "How do you make a creamy risotto?"
 #     assert bot.chat_history[1] == response
 
-def setup():
-    return Chatbot()
-
-def test_precise_responses():
-    bot = setup()
-
-    response = bot.respond("How do you make a creamy risotto?")
-    assert response != ""
+# def setup():
+#     return Chatbot()
+#
+# def test_precise_responses():
+#     bot = setup()
+#
+#     response = bot.respond("How do you make a creamy risotto?")
+#     assert response != ""

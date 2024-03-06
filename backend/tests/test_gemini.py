@@ -3,7 +3,7 @@ General tests for the chatterbot Ramsay AI to ensure it responds appropriately a
 of our training.
 """
 
-from gemini import Chatbot
+# from gemini import Chatbot
 
 # def test_responses():
 #     bot = setup()

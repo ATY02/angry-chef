@@ -1,7 +1,7 @@
 import subprocess
 import platform
 
-BASE_PATH = ''  # Todo - replace this with your path to the app
+BASE_PATH = '/Users/brandonmontijo/Documents/Github/angry-chef'  # Todo - replace this with your path to the app
 
 processes = []
 

@@ -100,6 +100,8 @@ const Chat = () => {
     };
 
     const handleClearChatHistory = () => {
+        handleClose();
+        setLoading(true);
         axios
             .post(`${baseUrl}/chat/history`)
             .catch((error) => {
@@ -107,7 +109,6 @@ const Chat = () => {
             })
             .finally(() => {
                 fetchChatHistory();
-                handleClose();
             });
     };
 
@@ -181,6 +182,7 @@ const Chat = () => {
                         <IconButton
                             onClick={handleOpen}
                             size={'medium'}
+                            disabled={loading}
                         >
                             <DeleteRoundedIcon fontSize={'inherit'}/>
                         </IconButton>
@@ -208,6 +210,7 @@ const Chat = () => {
                                     color={'error'}
                                     onClick={handleClearChatHistory}
                                     variant={'contained'}
+                                    loading={loading}
                                 >Confirm</Button>
                             </Stack>
                         </Box>

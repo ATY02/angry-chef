@@ -86,7 +86,16 @@ async def chat(message: str):
 @app.get("/chat/history")
 async def chat_history():
     return chatbot.chat_history
-
+      
+@app.post("/chat/history")
+async def clear_chat_history():
+    chatbot.chat = chatbot.model.start_chat(history=[])
+    chatbot.chat.send_message(
+        "answer all of my questions from the perspective of a very angry gordon ramsay from hells kitchen, "
+        "but be short in your answers and do not include your name in the responses",
+        safety_settings=SAFETY_SETTINGS,
+    )
+    chatbot.chat_history = []
 
 # Extracts the emotional state and the response
 def extract_response(response):

@@ -41,9 +41,11 @@ function App() {
             <CssBaseline/>
             <AppBar>
                 <Toolbar>
-                    <Typography variant={'h5'}>
-                        RamsayAI
-                    </Typography>
+                    <Link href={'/'} sx={{color: '#fff', textDecoration: 'none'}}>
+                        <Typography variant={'h5'}>
+                            RamsayAI
+                        </Typography>
+                    </Link>
                     <Stack direction={'row'} spacing={1} paddingLeft={4}>
                         <Link href={'/gemini'} sx={{color: '#fff', textDecoration: 'none'}}>
                             Gemini

@@ -45,7 +45,7 @@ PERSONALITY_PROMPT = "Answer all of my questions from the perspective of a angry
 class Chatbot:
     def __init__(self):
         self.model = genai.GenerativeModel("gemini-pro")
-        self.chat = self.model.start_chat(history=[])git
+        self.chat = self.model.start_chat(history=[])
         self.chat_history = []
 
         self.chat.send_message(

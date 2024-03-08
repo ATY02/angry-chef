@@ -17,12 +17,12 @@ import {
 import ArrowCircleUpRoundedIcon from "@mui/icons-material/ArrowCircleUpRounded";
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import ReactMarkdown from "react-markdown";
-import angryRamsay1 from '../../public/AngryRamsay1.png';
-import angryRamsay2 from '../../public/AngryRamsay2.png';
-import disappointedRamsay from '../../public/DisappointedRamsay.png';
-import happyRamsay from '../../public/HappyRamsay.png';
-import neutralRamsay from '../../public/NeutralRamsay.png';
-import ramsay from '../../public/ramsay.png';
+import angryRamsay1 from '/AngryRamsay1.png';
+import angryRamsay2 from '/AngryRamsay2.png';
+import disappointedRamsay from '/DisappointedRamsay.png';
+import happyRamsay from '/HappyRamsay.png';
+import neutralRamsay from '/NeutralRamsay.png';
+import ramsay from '/ramsay.png';
 
 
 function getSpecificImage(emotionalState) {

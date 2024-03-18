@@ -26,7 +26,6 @@ load_dotenv()
 class Chatbot:
     def __init__(self):
         self.bot = ChatBot("Gordon Ramsay")
-        self.chat_history = []
         self.gemini_bot = gemini.Chatbot()
         self.gemini_bot.respond("whenever I ask for a recipe, provide it to me in a manner where every "
                                 "instruction/step of the recipe is given in an insulting way and the words "
@@ -58,7 +57,7 @@ class Chatbot:
         return self.gemini_bot.respond(message)
 
     def add_to_history(self, message, response):
-        self.gemini_bot.add_to_history(message=message, response=response)
+        self.gemini_bot.add_to_history(message=message, response=response, emotion=5)
 
 
 chatbot = Chatbot()
@@ -76,10 +75,17 @@ async def chat(message: str):
 
 @app.get("/chat/history")
 async def chat_history():
-#     return chatbot.gemini_bot.chat_history
-    return chatbot.chat_history
+    return chatbot.gemini_bot.chat_history
 
 
 @app.post("/chat/history")
 async def clear_chat_history():
-    chatbot.chat_history = []
+    chatbot.gemini_bot = gemini.Chatbot()
+    chatbot.gemini_bot.respond("whenever I ask for a recipe, provide it to me in a manner where every "
+                            "instruction/step of the recipe is given in an insulting way and the words "
+                            "of Gordon Ramsay. embed the insult into the instruction like for example: Get your hands on a good cut of meat, you donkey!, "
+                            "Don't be stingy with the oil, you fool! "
+                            "Season it properly, you idiot sandwich! "
+                            "Add some garlic powder, you spoon! "
+                            "And don't forget the onion powder, you donut! "
+                            "Pat the steak dry with paper towels. You don't want it wet, you muppet! Remember not to include your name in the responses ever or mention giving a recipe. Think of it as a conversation")

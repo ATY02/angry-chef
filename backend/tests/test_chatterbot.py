@@ -32,7 +32,7 @@ def test_chat_history():
     bot.respond(prompt)
     bot.add_to_history(prompt, response)
 
-    assert bot.gemini_bot.chat_history[0] == {"message": prompt, "response": response}
+    assert bot.gemini_bot.chat_history[0] == {"message": prompt, "response": response, 'emotion': 5,}
 
 def test_precise_responses():
     bot = setup()

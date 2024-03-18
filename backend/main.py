@@ -26,6 +26,7 @@ load_dotenv()
 class Chatbot:
     def __init__(self):
         self.bot = ChatBot("Gordon Ramsay")
+        self.chat_history = []
         self.gemini_bot = gemini.Chatbot()
         self.gemini_bot.respond("whenever I ask for a recipe, provide it to me in a manner where every "
                                 "instruction/step of the recipe is given in an insulting way and the words "
@@ -89,3 +90,4 @@ async def clear_chat_history():
                             "Add some garlic powder, you spoon! "
                             "And don't forget the onion powder, you donut! "
                             "Pat the steak dry with paper towels. You don't want it wet, you muppet! Remember not to include your name in the responses ever or mention giving a recipe. Think of it as a conversation")
+    chatbot.chat_history = []

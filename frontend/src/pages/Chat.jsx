@@ -17,6 +17,21 @@ import {
 import ArrowCircleUpRoundedIcon from "@mui/icons-material/ArrowCircleUpRounded";
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import ReactMarkdown from "react-markdown";
+import angryRamsay1 from '/AngryRamsay1.png';
+import angryRamsay2 from '/AngryRamsay2.png';
+import disappointedRamsay from '/DisappointedRamsay.png';
+import happyRamsay from '/HappyRamsay.png';
+import neutralRamsay from '/NeutralRamsay.png';
+import ramsay from '/ramsay.png';
+
+
+function getSpecificImage(emotionalState) {
+    const images = [angryRamsay1, angryRamsay2, disappointedRamsay, happyRamsay, ramsay, neutralRamsay];
+    if(!Number.isInteger(emotionalState) || emotionalState > 5 || emotionalState < 0) {
+        return images[5];
+    }
+    return images[emotionalState];
+}
 
 
 const Chat = () => {
@@ -27,12 +42,10 @@ const Chat = () => {
     const [loading, setLoading] = useState(false);
     const messagesEndRef = useRef(null);
     const [baseUrl, setBaseUrl] = useState('');
-
-
+    const [gordonImg, setGordonImg] = useState(ramsay);
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-
 
     useEffect(() => {
         const currentUrl = window.location.href;
@@ -98,7 +111,18 @@ const Chat = () => {
             setInputText('');
         }
     };
+  
+    useEffect(() => {
+        let img = 5;
+        if (chatHistory.length > 0) {
+            if (chatHistory[chatHistory.length - 1].emotion) {
+                img = chatHistory[chatHistory.length - 1].emotion;
+            }
+        }
 
+        setGordonImg(getSpecificImage(img));
+    }, [chatHistory]);
+  
     const handleClearChatHistory = () => {
         handleClose();
         setLoading(true);
@@ -113,6 +137,7 @@ const Chat = () => {
     };
 
     return (
+        <>
         <Container
             maxWidth={"md"}
             sx={{
@@ -238,6 +263,10 @@ const Chat = () => {
                 </Stack>
             </Paper>
         </Container>
+        <Box sx={{position: 'fixed', bottom: 0, right: 0}}>
+                <img src={gordonImg} style={{width: '250px', height: 'auto'}}/>
+        </Box>
+        </>
     );
 }
 

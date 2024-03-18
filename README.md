@@ -2,6 +2,13 @@
 
 SWEN-356 Course Project
 
+## Overview
+
+The Angry Chef Chatbot (also known as RamsayAI) engages in cooking-related conversation with its users, answering questions about 
+cooking and giving recipe suggestions. It has been programmed to emulate the personality of the celebrity chef Gordon Ramsay; while
+it gives its responses to user prompts angrily and usually accompanied with insults, it answers questions and gives proper responsses
+to highest extent it can.
+
 ## Prerequisites
 
 Make sure Python3 is available on your machine - this API is using version 3.11. If you have multiple versions of

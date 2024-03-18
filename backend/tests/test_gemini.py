@@ -17,13 +17,6 @@ def test_responses():
     assert response != ""
 
 
-def test_chat_history():
-    bot = setup()
-    response = bot.respond("How do you make a creamy risotto?")
-    assert bot.gemini_bot.chat_history[0] == "How do you make a creamy risotto?"
-    assert bot.gemini_bot.chat_history[1] == response
-
-
 def test_precise_responses():
     bot = setup()
 

@@ -46,7 +46,7 @@ python -m uvicorn main:app --reload
 ```
 
 Note - in order for the frontend to work with both gemini and chatterbot, you need to run both serveres in separate
-windows. To do this, run the below commands (also see google gemini setup instructions below):
+windows. To do this, run the below commands (also see [google gemini setup instructions](#development----google-gemini) below):
 
 ```bash
 uvicorn gemini:app --reload --port 8000
@@ -126,3 +126,9 @@ at http://localhost:8000/docs
 ### Frontend
 
 The frontend setup and usage remains the same as above.
+
+## Tests
+
+To observe the most recent test runs, you can navigate to the Github Actions test pipeline by clicking the green checkmark
+by the bar indicating the most recent commit. The tests are run by the CI/CD upon any push to main or on creation/update of
+a pull request. Tests should run locally using the pytest command, though we do not have a refined process to set this up.

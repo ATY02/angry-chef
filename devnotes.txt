@@ -1,0 +1,13 @@
+gemini.py - chat.send_message tells the Gemini AI how to act
+main.py - Chatterbot QnA format
+App.jsx - where to put visible emotions
+
+Gemini - can tell it how to act
+Chatterbot - based on our input
+
+UX improvements: make Gemini and Chatterbot look like tabs
+    make sure visible emotion Gordon goes under chat if there is no space on left side
+    dark/lightmode state stays between tabs
+
+In main.py, make Gordon answers less obviously made by AI.
+    In other words, actually good insults.

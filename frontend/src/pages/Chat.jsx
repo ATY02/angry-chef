@@ -1,9 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import {useEffect, useRef, useState} from "react";
 import axios from "axios";
 import {
     Box,
+    Button,
+    Container,
     IconButton,
     LinearProgress,
+    Modal,
     Paper,
     Stack,
     TextField,
@@ -12,7 +15,24 @@ import {
     useTheme,
 } from "@mui/material";
 import ArrowCircleUpRoundedIcon from "@mui/icons-material/ArrowCircleUpRounded";
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import ReactMarkdown from "react-markdown";
+import angryRamsay1 from '/AngryRamsay1.png';
+import angryRamsay2 from '/AngryRamsay2.png';
+import disappointedRamsay from '/DisappointedRamsay.png';
+import happyRamsay from '/HappyRamsay.png';
+import neutralRamsay from '/NeutralRamsay.png';
+import ramsay from '/ramsay.png';
+
+
+function getSpecificImage(emotionalState) {
+    const images = [angryRamsay1, angryRamsay2, disappointedRamsay, happyRamsay, ramsay, neutralRamsay];
+    if(!Number.isInteger(emotionalState) || emotionalState > 5 || emotionalState < 0) {
+        return images[5];
+    }
+    return images[emotionalState];
+}
+
 
 const Chat = () => {
     const theme = useTheme();
@@ -22,6 +42,10 @@ const Chat = () => {
     const [loading, setLoading] = useState(false);
     const messagesEndRef = useRef(null);
     const [baseUrl, setBaseUrl] = useState('');
+    const [gordonImg, setGordonImg] = useState(ramsay);
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
     useEffect(() => {
         const currentUrl = window.location.href;
@@ -39,7 +63,6 @@ const Chat = () => {
     }, [baseUrl]);
 
     const fetchChatHistory = () => {
-        console.log('Making request to...', `${baseUrl}/chat/history`)
         axios
             .get(`${baseUrl}/chat/history`)
             .then((response) => {
@@ -54,7 +77,7 @@ const Chat = () => {
     };
 
     useEffect(() => {
-        messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        messagesEndRef.current.scrollIntoView({behavior: 'smooth'});
     }, [chatHistory]);
 
     const handleSendMessage = () => {
@@ -82,13 +105,50 @@ const Chat = () => {
     };
 
     const handledKeyPress = (e) => {
-        if (e.key === "Enter") {
+        if (e.keyCode === 13 && !e.shiftKey) {
+            e.preventDefault();
             handleSendMessage();
+            setInputText('');
         }
+    };
+  
+    useEffect(() => {
+        let img = 5;
+        if (chatHistory.length > 0) {
+            if (chatHistory[chatHistory.length - 1].emotion) {
+                img = chatHistory[chatHistory.length - 1].emotion;
+            }
+        }
+
+        setGordonImg(getSpecificImage(img));
+    }, [chatHistory]);
+  
+    const handleClearChatHistory = () => {
+        handleClose();
+        setLoading(true);
+        axios
+            .post(`${baseUrl}/chat/history`)
+            .catch((error) => {
+                console.error("Error:", error);
+            })
+            .finally(() => {
+                fetchChatHistory();
+            });
     };
 
     return (
         <>
+        <Container
+            maxWidth={"md"}
+            sx={{
+                p: 2,
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "flex-end",
+                minHeight: "100vh",
+            }}
+        >
             <Stack direction={'column'} spacing={1}>
                 {chatHistory.map((message, index) => (
                     <div key={index}>
@@ -100,14 +160,31 @@ const Chat = () => {
                             borderRadius={1}
                         >
                             <Typography variant={"h6"}>You</Typography>
-                            <Typography variant={"body1"}>{message.message}</Typography>
+                            {message.message.split("\n").map((line, index) => (
+                                <div key={index}>
+                                    <ReactMarkdown
+                                        skipHtml={false}
+                                        components={{
+                                            p: ({children, ...props}) => (
+                                                <Typography variant={"body1"} {...props}>
+                                                    {children}
+                                                </Typography>
+                                            ),
+                                        }}
+                                    >
+                                        {line}
+                                    </ReactMarkdown>
+                                    {index !== message.message.split("\n").length - 1 ? <br/> : undefined}
+                                </div>
+                            ))}
                         </Box>
                         <Box textAlign={"left"} m={1} p={1}>
                             <Typography variant={"h6"}>Ramsay</Typography>
                             <ReactMarkdown
+                                key={index}
                                 skipHtml={false}
                                 components={{
-                                    p: ({ children, ...props }) => (
+                                    p: ({children, ...props}) => (
                                         <Typography variant={"body1"} {...props}>
                                             {children}
                                         </Typography>
@@ -119,15 +196,53 @@ const Chat = () => {
                         </Box>
                     </div>
                 ))}
-                <div ref={messagesEndRef} />
+                <div ref={messagesEndRef}/>
             </Stack>
-            <Paper sx={{ mt: 2 }}>
+            <Paper sx={{mt: 2}}>
                 {loading && (
-                    <LinearProgress color={"secondary"} sx={{ borderRadius: 2 }} />
+                    <LinearProgress color={"secondary"} sx={{borderRadius: 2}}/>
                 )}
-                <Stack direction={"row"} spacing={1} sx={{ p: 1 }}>
+                <Stack direction={"row"} spacing={1} sx={{p: 1}}>
+                    <Tooltip title={"Clear History"}>
+                        <IconButton
+                            onClick={handleOpen}
+                            size={'medium'}
+                            disabled={loading}
+                        >
+                            <DeleteRoundedIcon fontSize={'inherit'}/>
+                        </IconButton>
+                    </Tooltip>
+                    <Modal
+                        open={open}
+                        onClose={handleClose}
+                    >
+                        <Box sx={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: 400,
+                            bgcolor: 'background.paper',
+                            boxShadow: 24,
+                            p: 2,
+                        }}>
+                            <Typography variant={'body1'} paddingBottom={3}>
+                                Are you sure you want to clear chat history?
+                            </Typography>
+                            <Stack direction={'row'} justifyContent={'flex-end'} spacing={1}>
+                                <Button color={'inherit'} onClick={handleClose}>Cancel</Button>
+                                <Button
+                                    color={'error'}
+                                    onClick={handleClearChatHistory}
+                                    variant={'contained'}
+                                    loading={loading}
+                                >Confirm</Button>
+                            </Stack>
+                        </Box>
+                    </Modal>
                     <TextField
                         fullWidth
+                        multiline
                         variant={"outlined"}
                         size={"small"}
                         placeholder={"Type your message..."}
@@ -142,11 +257,15 @@ const Chat = () => {
                             size={"medium"}
                             disabled={loading}
                         >
-                            <ArrowCircleUpRoundedIcon fontSize={"inherit"} />
+                            <ArrowCircleUpRoundedIcon fontSize={"inherit"}/>
                         </IconButton>
                     </Tooltip>
                 </Stack>
             </Paper>
+        </Container>
+        <Box sx={{position: 'fixed', bottom: 0, right: 0}}>
+                <img src={gordonImg} style={{width: '250px', height: 'auto'}}/>
+        </Box>
         </>
     );
 }

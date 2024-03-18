@@ -76,4 +76,10 @@ async def chat(message: str):
 
 @app.get("/chat/history")
 async def chat_history():
-    return chatbot.gemini_bot.chat_history
+#     return chatbot.gemini_bot.chat_history
+    return chatbot.chat_history
+
+
+@app.post("/chat/history")
+async def clear_chat_history():
+    chatbot.chat_history = []

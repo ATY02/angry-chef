@@ -80,7 +80,7 @@ async def chat(message: str):
         responseEmotion = actualResponse[0]
 
         if (responseEmotion < 0) or (responseEmotion > 5):
-            responseEmotion = 5;
+            responseEmotion = 5
 
         responseText = actualResponse[1]
 

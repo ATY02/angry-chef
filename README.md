@@ -2,6 +2,13 @@
 
 SWEN-356 Course Project
 
+## Overview
+
+The Angry Chef Chatbot (also known as RamsayAI) engages in cooking-related conversation with its users, answering questions about 
+cooking and giving recipe suggestions. It has been programmed to emulate the personality of the celebrity chef Gordon Ramsay; while
+it gives its responses to user prompts angrily and usually accompanied with insults, it answers questions and gives proper responsses
+to highest extent it can.
+
 ## Prerequisites
 
 Make sure Python3 is available on your machine - this API is using version 3.11. If you have multiple versions of
@@ -46,7 +53,7 @@ python -m uvicorn main:app --reload
 ```
 
 Note - in order for the frontend to work with both gemini and chatterbot, you need to run both serveres in separate
-windows. To do this, run the below commands (also see google gemini setup instructions below):
+windows. To do this, run the below commands (also see [google gemini setup instructions](#development----google-gemini) below):
 
 ```bash
 uvicorn gemini:app --reload --port 8000
@@ -126,3 +133,9 @@ at http://localhost:8000/docs
 ### Frontend
 
 The frontend setup and usage remains the same as above.
+
+## Tests
+
+To observe the most recent test runs, you can navigate to the Github Actions test pipeline by clicking the green checkmark
+by the bar indicating the most recent commit. The tests are run by the CI/CD upon any push to main or on creation/update of
+a pull request. Tests should run locally using the pytest command, though we do not have a refined process to set this up.

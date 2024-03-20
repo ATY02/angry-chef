@@ -18,6 +18,8 @@ app.add_middleware(
 )
 
 load_dotenv()
+
+
 # GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 # genai.configure(api_key=GOOGLE_API_KEY)
 
@@ -37,13 +39,14 @@ def read_recipes(filename: str):
                 if line.strip()[-1] == "\"":
                     recipes.append(line.strip()[1:-1])
                 else:
-                    current_line = line[1:]  
+                    current_line = line[1:]
             elif len(line.strip()) > 0 and line.strip()[-1] == "\"":
                 current_line += line.strip()[:-1]
                 recipes.append(current_line)
             else:
                 current_line += line
     return recipes
+
 
 class Chatbot:
     def __init__(self):
@@ -444,3 +447,8 @@ async def chat(message: str):
 @app.get("/chat/history")
 async def chat_history():
     return chatbot.chat_history
+
+
+@app.post("/chat/history")
+async def clear_chat_history():
+    chatbot.chat_history = []

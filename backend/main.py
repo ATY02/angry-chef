@@ -35,7 +35,7 @@ class Chatbot:
                                 "Season it properly, you idiot sandwich! "
                                 "Add some garlic powder, you spoon! "
                                 "And don't forget the onion powder, you donut! "
-                                "Pat the steak dry with paper towels. You don't want it wet, you muppet! Remember not to include your name in the responses ever or mention giving a recipe. Think of it as a conversation")
+                                "Pat the steak dry with paper towels. You don't want it wet, you muppet! Remember not to include your name in the responses ever or mention giving a recipe. Think of it as a conversation. Also do not include unordinary characters such as brackets }")
 
         trainer = ListTrainer(self.bot)
         try:
